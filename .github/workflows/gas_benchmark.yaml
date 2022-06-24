@@ -30,7 +30,7 @@ jobs:
         run: RUST_LOG=DEBUG cargo run
 
       - name: Debug
-        run: ls -la
+        run: cat gas_report.json
 
       # TODO: Call my new cosm-orc-gas-diff-action instead
       #- name: Post Diff to PR
