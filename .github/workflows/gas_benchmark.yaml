@@ -19,10 +19,21 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
+
       - name: Setup Juno Node
         run: cd /opt && /opt/setup_and_run.sh juno10j9gpw9t4jsz47qgnkvl5n3zlm2fz72k67rxsg > /dev/null 2>&1 &
+
+      - name: Install latest nightly toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          target: wasm32-unknown-unknown
+          override: true
+
       - name: Calculate gas costs
         run: RUST_LOG=DEBUG cargo run
+
       - name: Debug
         run: ls -la
 
