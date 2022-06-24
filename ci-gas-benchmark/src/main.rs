@@ -15,6 +15,8 @@ fn main() -> Result<()> {
     let mut cosm_orc =
         CosmOrc::new(Config::from_yaml("config.yaml")?).add_profiler(Box::new(GasProfiler::new()));
 
+    cosm_orc.store_contracts("./artifacts")?;
+
     let msgs: Vec<WasmMsg<InstantiateMsg, ExecuteMsg, QueryMsg>> = vec![
         WasmMsg::InstantiateMsg(InstantiateMsg {
             name: "Meme Token".to_string(),
