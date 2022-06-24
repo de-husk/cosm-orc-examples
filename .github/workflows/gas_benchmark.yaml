@@ -1,0 +1,34 @@
+on: [pull_request]
+
+name: Gas Benchmark
+
+jobs:
+  gas:
+    name: Calculate gas costs in local juno
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./ci-gas-benchmark
+    container:
+      image: ghcr.io/cosmoscontracts/juno:v2.3.0-beta.1
+      env:
+        PASSWORD: xxxxxxxxx
+        STAKE_TOKEN: ujunox
+        GAS_LIMIT: -1
+        UNSAFE_CORS: true
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+      - name: Setup Juno Node
+        run: cd /opt && /opt/setup_and_run.sh juno10j9gpw9t4jsz47qgnkvl5n3zlm2fz72k67rxsg > /dev/null 2>&1 &
+      - name: Calculate gas costs
+        run: RUST_LOG=DEBUG cargo run
+      - name: Debug
+        run: ls -la
+      # TODO: Call my new cosm-orc-gas-diff-action instead
+      #- name: Post Diff to PR
+      #  uses: actions/github-script@v6
+      #  with:
+      #    script: |
+      #      const script = require('./scripts/calc_gas/post_gas_costs.js')
+      #      await script({github, context, core})
