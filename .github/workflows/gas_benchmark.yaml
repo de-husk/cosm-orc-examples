@@ -36,4 +36,4 @@ jobs:
         uses: de-husk/cosm-orc-gas-diff-action@v0.1
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          current_json: "./gas_report.json" # TODO: This doesnt work??
+          current_json: "./ci-gas-benchmark/gas_report.json"
