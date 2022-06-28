@@ -30,9 +30,10 @@ jobs:
         run: RUST_LOG=DEBUG cargo run
 
       - name: Debug
-        run: cat gas_report.json
+        run: cat ./gas_report.json
 
-      - uses: de-husk/cosm-orc-gas-diff-action@v0
+      - name: Post gas diff to PR
+        uses: de-husk/cosm-orc-gas-diff-action@v0
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          current_json: "./gas_report.json"
+          current_json: "./gas_report.json" # TODO: This doesnt work??
