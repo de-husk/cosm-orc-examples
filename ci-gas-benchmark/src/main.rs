@@ -4,7 +4,8 @@ use cosm_orc::{
     orchestrator::cosm_orc::{CosmOrc, WasmMsg},
     profilers::gas_profiler::GasProfiler,
 };
-use cw20_base::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
+use cw20::{EmbeddedLogo, Logo};
+use cw20_base::msg::{ExecuteMsg, InstantiateMarketingInfo, InstantiateMsg, QueryMsg};
 use serde_json::Value;
 use std::fs;
 
@@ -17,6 +18,8 @@ fn main() -> Result<()> {
 
     cosm_orc.store_contracts("./artifacts")?;
 
+    let logo_bin = fs::read("./choad.png")?;
+
     let msgs: Vec<WasmMsg<InstantiateMsg, ExecuteMsg, QueryMsg>> = vec![
         WasmMsg::InstantiateMsg(InstantiateMsg {
             name: "Meme Token".to_string(),
@@ -24,7 +27,12 @@ fn main() -> Result<()> {
             decimals: 6,
             initial_balances: vec![],
             mint: None,
-            marketing: None,
+            marketing: Some(InstantiateMarketingInfo {
+                project: Some("juno10j9gpw9t4jsz47qgnkvl5n3zlm2fz72k67rxsg".to_string()),
+                description: Some("Meme".to_string()),
+                marketing: Some("juno10j9gpw9t4jsz47qgnkvl5n3zlm2fz72k67rxsg".to_string()),
+                logo: Some(Logo::Embedded(EmbeddedLogo::Png(logo_bin.into()))),
+            }),
         }),
         WasmMsg::QueryMsg(QueryMsg::TokenInfo {}),
     ];
