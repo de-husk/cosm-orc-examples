@@ -27,13 +27,12 @@ fn main() -> Result<()> {
             decimals: 6,
             initial_balances: vec![],
             mint: None,
-            marketing: None,
-            //marketing: Some(InstantiateMarketingInfo {
-            //    project: Some("juno10j9gpw9t4jsz47qgnkvl5n3zlm2fz72k67rxsg".to_string()),
-            //    description: Some("Meme".to_string()),
-            //    marketing: Some("juno10j9gpw9t4jsz47qgnkvl5n3zlm2fz72k67rxsg".to_string()),
-            //    logo: Some(Logo::Embedded(EmbeddedLogo::Png(logo_bin.into()))),
-            //}),
+            marketing: Some(InstantiateMarketingInfo {
+                project: Some("juno10j9gpw9t4jsz47qgnkvl5n3zlm2fz72k67rxsg".to_string()),
+                description: Some("Meme".to_string()),
+                marketing: Some("juno10j9gpw9t4jsz47qgnkvl5n3zlm2fz72k67rxsg".to_string()),
+                logo: Some(Logo::Embedded(EmbeddedLogo::Png(logo_bin.into()))),
+            }),
         }),
         WasmMsg::QueryMsg(QueryMsg::TokenInfo {}),
     ];
