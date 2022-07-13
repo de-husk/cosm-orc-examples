@@ -55,4 +55,4 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           current_json: "/new_gas_report.json"
-          old_json: ""/old_gas_report.json"
+          old_json: "/old_gas_report.json"
