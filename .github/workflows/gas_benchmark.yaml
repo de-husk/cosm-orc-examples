@@ -10,7 +10,7 @@ jobs:
       run:
         working-directory: ./ci-gas-benchmark
     container:
-      image: ghcr.io/cosmoscontracts/juno:v6.0.0
+      image: ghcr.io/cosmoscontracts/juno:v9.0.0
       env:
         PASSWORD: xxxxxxxxx
         STAKE_TOKEN: ujunox
