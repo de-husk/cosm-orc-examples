@@ -6,22 +6,26 @@ jobs:
   gas:
     name: Calculate gas costs in local juno
     runs-on: ubuntu-latest
+    env:
+      ADMIN_ADDR: juno10j9gpw9t4jsz47qgnkvl5n3zlm2fz72k67rxsg
     defaults:
       run:
         working-directory: ./ci-gas-benchmark
-    container:
-      image: ghcr.io/cosmoscontracts/juno:v9.0.0
-      env:
-        PASSWORD: xxxxxxxxx
-        STAKE_TOKEN: ujunox
-        GAS_LIMIT: -1
-        UNSAFE_CORS: true
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
 
-      - name: Setup Juno Node
-        run: cd /opt && /opt/setup_and_run.sh juno10j9gpw9t4jsz47qgnkvl5n3zlm2fz72k67rxsg > /dev/null 2>&1 &
+      - name: Run Local Juno Node
+        run: |
+          docker run --rm -d --name juno \
+            -e PASSWORD=xxxxxxxxx \
+            -e STAKE_TOKEN=ujunox \
+            -e GAS_LIMIT=100000000 \
+            -e UNSAFE_CORS=true \
+            -p 1317:1317 \
+            -p 26656:26656 \
+            -p 26657:26657 \
+            ghcr.io/cosmoscontracts/juno:v9.0.0 /opt/setup_and_run.sh $ADMIN_ADDR
 
       - name: Calculate gas costs
         run: RUST_LOG=DEBUG cargo run
