@@ -4,10 +4,11 @@ use cosm_orc::{
         cfg::Config,
         key::{Key, SigningKey},
     },
-    orchestrator::cosm_orc::{CosmOrc, WasmMsg},
+    orchestrator::cosm_orc::CosmOrc,
     profilers::gas_profiler::GasProfiler,
 };
-use cw20_base::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
+use cw20::TokenInfoResponse;
+use cw20_base::msg::{InstantiateMsg, QueryMsg};
 use serde_json::Value;
 use std::fs;
 
@@ -24,19 +25,24 @@ fn main() -> Result<()> {
 
     cosm_orc.store_contracts("./artifacts", &key)?;
 
-    let msgs: Vec<WasmMsg<InstantiateMsg, ExecuteMsg, QueryMsg>> = vec![
-        WasmMsg::InstantiateMsg(InstantiateMsg {
+    cosm_orc.instantiate(
+        "cw20_base",
+        "ex_tok_info",
+        &InstantiateMsg {
             name: "Meme Token".to_string(),
             symbol: "MEME".to_string(),
             decimals: 6,
             initial_balances: vec![],
             mint: None,
             marketing: None,
-        }),
-        WasmMsg::QueryMsg(QueryMsg::TokenInfo {}),
-    ];
+        },
+        &key,
+    )?;
 
-    cosm_orc.process_msgs("cw20_base", "ex_tok_info", &msgs, &key)?;
+    let res = cosm_orc.query("cw20_base", "ex_tok_info", &QueryMsg::TokenInfo {})?;
+    let res: TokenInfoResponse = serde_json::from_slice(res.data.as_ref().unwrap().value())?;
+
+    println!("{:?}", res);
 
     let reports = cosm_orc.profiler_reports().unwrap();
 
