@@ -40,9 +40,9 @@ fn main() -> Result<()> {
     )?;
 
     let res = cosm_orc.query("cw20_base", "ex_tok_info", &QueryMsg::TokenInfo {})?;
-    let res: TokenInfoResponse = serde_json::from_slice(res.data.as_ref().unwrap().value())?;
+    let token: TokenInfoResponse = res.data()?;
 
-    println!("{:?}", res);
+    println!("{:?}", token);
 
     let reports = cosm_orc.profiler_reports().unwrap();
 
