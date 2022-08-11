@@ -6,3 +6,5 @@ chain_cfg:
   gas_prices: 0.1
   gas_adjustment: 1.5
 
+code_ids:
+  cw20_base: 1
