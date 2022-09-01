@@ -5,7 +5,6 @@ use cosm_orc::{
         key::{Key, SigningKey},
     },
     orchestrator::cosm_orc::CosmOrc,
-    profilers::gas_profiler::GasProfiler,
 };
 use cosmwasm_std::Uint128;
 use cw20::{Cw20Coin, Cw20ExecuteMsg, TokenInfoResponse};
@@ -17,7 +16,7 @@ fn main() -> Result<()> {
     env_logger::init();
 
     let cfg = Config::from_yaml("config.yaml")?;
-    let mut cosm_orc = CosmOrc::new(cfg.clone())?.add_profiler(Box::new(GasProfiler::new()));
+    let mut cosm_orc = CosmOrc::new(cfg.clone(), true)?;
 
     let key = SigningKey {
         name: "validator".to_string(),
@@ -44,7 +43,7 @@ fn main() -> Result<()> {
         &key,
     )?;
 
-    let res = cosm_orc.query("cw20_base", "ex_tok_info", &QueryMsg::TokenInfo {})?;
+    let res = cosm_orc.query("cw20_base", &QueryMsg::TokenInfo {})?;
     let info: TokenInfoResponse = res.data()?;
 
     println!("{:?}", info);
@@ -58,14 +57,14 @@ fn main() -> Result<()> {
         &key,
     )?;
 
-    let res = cosm_orc.query("cw20_base", "ex_tok_info", &QueryMsg::TokenInfo {})?;
+    let res = cosm_orc.query("cw20_base", &QueryMsg::TokenInfo {})?;
     let info: TokenInfoResponse = res.data()?;
 
     println!("{:?}", info);
 
-    let reports = cosm_orc.profiler_reports().unwrap();
+    let report = cosm_orc.gas_profiler_report().unwrap();
 
-    let j: Value = serde_json::from_slice(&reports[0].json_data)?;
+    let j: Value = serde_json::to_value(report)?;
     fs::write("./gas_report.json", j.to_string())?;
 
     Ok(())
