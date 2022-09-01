@@ -25,6 +25,7 @@ jobs:
             -p 1317:1317 \
             -p 26656:26656 \
             -p 26657:26657 \
+            -p 9090:9090 \
             ghcr.io/cosmoscontracts/juno:v9.0.0 /opt/setup_and_run.sh $ADMIN_ADDR
 
       - name: Calculate gas costs
