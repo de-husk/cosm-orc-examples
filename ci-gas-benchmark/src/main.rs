@@ -24,7 +24,7 @@ fn main() -> Result<()> {
     };
     let account = key.to_account(&cfg.chain_cfg.prefix)?;
 
-    cosm_orc.store_contracts("./artifacts", &key)?;
+    cosm_orc.store_contracts("./artifacts", &key, None)?;
 
     cosm_orc.instantiate(
         "cw20_base",
@@ -41,6 +41,8 @@ fn main() -> Result<()> {
             marketing: None,
         },
         &key,
+        None,
+        vec![],
     )?;
 
     let res = cosm_orc.query("cw20_base", &QueryMsg::TokenInfo {})?;
@@ -55,6 +57,7 @@ fn main() -> Result<()> {
             amount: Uint128::new(50),
         },
         &key,
+        vec![],
     )?;
 
     let res = cosm_orc.query("cw20_base", &QueryMsg::TokenInfo {})?;
