@@ -1,7 +1,10 @@
 use anyhow::Result;
 use cosm_orc::{
     config::cfg::Config,
-    orchestrator::{cosm_orc::CosmOrc, Key, SigningKey},
+    orchestrator::{
+        cosm_orc::{tokio_block, CosmOrc},
+        Key, SigningKey,
+    },
 };
 use cosmwasm_std::Uint128;
 use cw20::{Cw20Coin, Cw20ExecuteMsg, TokenInfoResponse};
@@ -18,8 +21,9 @@ fn main() -> Result<()> {
     let key = SigningKey {
         name: "validator".to_string(),
         key: Key::Mnemonic("siren window salt bullet cream letter huge satoshi fade shiver permit offer happy immense wage fitness goose usual aim hammer clap about super trend".to_string()),
+        derivation_path: cfg.chain_cfg.derivation_path.clone(),
     };
-    let account = key.to_addr(&cfg.chain_cfg.prefix)?;
+    let account = tokio_block(key.to_addr(&cfg.chain_cfg.prefix))?;
 
     cosm_orc.store_contracts("./artifacts", &key, None)?;
 
